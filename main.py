@@ -27,7 +27,7 @@ sasl_generate_content_config = types.GenerateContentConfig(
         },
     ),
     system_instruction=[
-        types.Part.from_text(text="""Convert the following string to the syntactical structure of ASL. Use a r For example, if the string said \"I am going to the park\", your response would be \"I go park\". If there are any proper nouns that need to be spelled out, separate each letter with a space."""),
+        types.Part.from_text(text="""Convert the string to the syntactical structure of ASL. For example, if the string said \"I am going to the park\", your response would be \"I go park\", and \"What time is it?\" would be \"Time what?\". If there are any proper nouns that need to be spelled out, separate each letter with a space. Don't include words like \"is\" unless nessecary. For example \"My name is Tom\" becomes \"My name T O M\"."""),
     ],
 )
 hnym_generate_content_config = types.GenerateContentConfig(
@@ -106,7 +106,6 @@ The following is a sentence, which is a segment of a transcription of an ASL con
 ```
 Return the index of the definition that most closely matches the word as it's used in the sentence. If it's ambiguous, make an educated guess.\
 """
-    
     contents = [
         types.Content(
             role="user",
@@ -210,12 +209,13 @@ def stitch_videos(urls, output_filename="stitched_video.mp4"):
                 
                 with open(temp_path, 'wb') as f:
                     for chunk in response.iter_content(chunk_size=8192):
-                        f.write(chunk)
+                        if chunk:
+                            f.write(chunk)
                 
                 print(f"Downloaded video from {url}")
                 
                 # Create a moviepy video clip from the downloaded file
-                clip = VideoFileClip(temp_path)
+                clip = VideoFileClip(temp_path).resized((960, 540))
                 video_clips.append(clip)
             except requests.exceptions.RequestException as e:
                 print(f"Failed to download video from {url}: {e}")
@@ -254,6 +254,8 @@ def sentence_to_video(sentence: str):
     stitch_videos(sentence_to_links(sentence), video_title)
 
 if __name__ == "__main__":
-    sentence_to_video("What time is it?")
-    sentence_to_video("My name is Tom.")
-    sentence_to_video("Where is the bathroom?")
+    with open('sentences_to_translate.txt', 'r') as f:
+        sentences_to_translate = f.read()
+    sentences_to_translate = sentences_to_translate.split('\n')
+    for sentence in sentences_to_translate:
+        sentence_to_video(sentence)

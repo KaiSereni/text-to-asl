@@ -21,10 +21,8 @@ Takes text as input -> Google Gemini converts the text's syntactical structure t
 
 ## Example
 Input: `What time is it`</br>
-Output: "TIME WHAT"
-<img width="960" height="540" alt="'What time is it' in sign language, signed as 'TIME, WHAT'." src="https://github.com/user-attachments/assets/11bfd6f3-4a2e-4b68-aa2f-c21abd49db35" />
-
-
+Output: </br>
+![What_time_is_it](https://github.com/user-attachments/assets/be1cc90b-1dd7-438e-838c-45c55f94d812)
 
 
 

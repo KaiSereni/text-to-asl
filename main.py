@@ -255,7 +255,7 @@ def sentence_to_video(sentence: str):
 
 if __name__ == "__main__":
     with open('sentences_to_translate.txt', 'r') as f:
-        sentences_to_translate = f.read()
+        sentences_to_translate = f.read().strip()
     sentences_to_translate = sentences_to_translate.split('\n')
     for sentence in sentences_to_translate:
         sentence_to_video(sentence)

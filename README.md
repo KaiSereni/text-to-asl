@@ -20,8 +20,8 @@ Projects like [sign.mt](https://sign.mt/) have created something similar, except
 Takes text as input -> Google Gemini converts the text's syntactical structure to that of ASL -> If there are any homonyns (words with multiple definitions/signs), Google Gemini clarifies which definition to use -> each sign is downloaded as a video from the SignASL database -> the videos are stitched together with MoviePy -> Saves output video
 
 ## Example
-Input: `What time is it`
-Output:
+Input: `What time is it`</br>
+Output: "TIME WHAT"
 <img width="960" height="540" alt="'What time is it' in sign language, signed as 'TIME, WHAT'." src="https://github.com/user-attachments/assets/11bfd6f3-4a2e-4b68-aa2f-c21abd49db35" />
 
 

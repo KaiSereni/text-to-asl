@@ -4,15 +4,20 @@ from google.genai import types
 from dotenv import load_dotenv
 import re
 import requests
-from bs4 import BeautifulSoup, PageElement
+from bs4 import BeautifulSoup
+from bs4.element import PageElement
 from moviepy import VideoFileClip, concatenate_videoclips
 
 load_dotenv()
+gemini_key = os.getenv("GENAI_API_KEY")
+if not gemini_key:
+    raise RuntimeError("Remember to create a .env file with your Gemini API key! Read README.md")
 
 client = genai.Client(
-    api_key=os.getenv("GENAI_API_KEY")
+    api_key=gemini_key
 )
-model = "gemini-2.5-flash-lite"
+
+model = os.getenv("GEMINI_MODEL") or "gemini-2.5-flash-lite"
 sasl_generate_content_config = types.GenerateContentConfig(
     temperature=0,
     top_p=0,
@@ -57,9 +62,9 @@ def string_to_asl_syntax(english_str: str):
 
     output_content: str = client.models.generate_content(
         model=model,
-        contents=contents,
+        contents=contents, # type: ignore
         config=sasl_generate_content_config,
-    ).parsed["asl-syntax-translation"]
+    ).parsed["asl-syntax-translation"] # type: ignore
     
     output_content = output_content.strip().upper().replace("\n", " ")
     output_content = re.sub(r'[^a-zA-Z\s]', '', output_content)
@@ -117,9 +122,9 @@ Return the index of the definition that most closely matches the word as it's us
 
     output_content: str = client.models.generate_content(
         model=model,
-        contents=contents,
+        contents=contents, # type: ignore
         config=hnym_generate_content_config,
-    ).parsed["matching-definition-index"]
+    ).parsed["matching-definition-index"] # type: ignore
     
     return int(output_content)
 
@@ -163,12 +168,14 @@ def get_sign_video_link_from_sentence(words_in_sentence: list[str], word_index: 
         end_idx = homonym_indices[n+1] if n+1 < len(homonym_indices) else len(children)
         new_div = BeautifulSoup('<div class="col-md-12"></div>', 'html.parser').div
         for child in children[start_idx:end_idx]:
-            new_div.append(child)
+            if new_div:
+                new_div.append(child)
         target_div = new_div
     
-    for child in target_div.find_all("source"):
-        if "src" in child.attrs.keys():
-            return child.attrs.get("src")
+    if target_div:
+        for child in target_div.find_all("source"):
+            if "src" in child.attrs.keys():
+                return child.attrs.get("src")
     
 def sentence_to_links(sentence: str):
     words_in_sentence = string_to_asl_syntax(sentence)
@@ -245,11 +252,12 @@ def stitch_videos(urls, output_filename="stitched_video.mp4"):
             shutil.rmtree(temp_dir)
             print(f"Cleaned up temporary directory '{temp_dir}'")
 
-def sentence_to_video(sentence: str):
+def sentence_to_video(sentence: str, dist_dir="./out/"):
     video_title = sentence.lower()
     video_title = re.sub(r'[^a-zA-Z\s]', '', sentence)
     video_title = video_title.replace(" ", "_")
-    video_title = "out/" + video_title + ".mp4"
+    video_title = os.path.join(dist_dir, video_title + ".mp4")
+
     
     stitch_videos(sentence_to_links(sentence), video_title)
 

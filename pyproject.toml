@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "text_to_asl"
+version = "1.0.1"
+authors = [
+  { name="Kai Sereni", email="kai@kai.gallery" },
+]
+description = "Converts text to ASL video"
+readme = "README.md"
+requires-python = ">=3.12"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = [
+    "google-genai",
+    "python-dotenv",
+    "requests",
+    "BeautifulSoup4",
+    "moviepy"
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}

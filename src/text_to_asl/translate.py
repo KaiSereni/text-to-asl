@@ -252,7 +252,15 @@ def stitch_videos(urls, output_filename="stitched_video.mp4"):
             shutil.rmtree(temp_dir)
             print(f"Cleaned up temporary directory '{temp_dir}'")
 
-def sentence_to_video(sentence: str, dist_dir="./out/"):
+def sentence_to_video(sentence: str, dist_dir: str="./out/"):
+    """
+    Converts a sentence into a video in which that sentence is signed in ASL and sends the output to the specified dist_dir folder.
+    
+    :param sentence: The input text to be translated into ASL
+    :type sentence: str
+    :param dist_dir: The output path for the video
+    :type dist_dir: str
+    """
     video_title = sentence.lower()
     video_title = re.sub(r'[^a-zA-Z\s]', '', sentence)
     video_title = video_title.replace(" ", "_")

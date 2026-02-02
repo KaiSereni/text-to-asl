@@ -11,9 +11,9 @@ Projects like [sign.mt](https://sign.mt/) have created something similar, except
 
 2. **API Keys**
 
-Create a [Google Gemini API](https://aistudio.google.com/api-keys) token and add it to a `GEMINI_KEY` property in your .env file
+Create a [Google Gemini API](https://aistudio.google.com/api-keys) token and add it to a `GEMINI_API_KEY` property in your .env file
 ```env
-GEMINI_KEY=yourkeyhere
+GEMINI_API_KEY=yourkeyhere
 ```
 
 3. Use the package
